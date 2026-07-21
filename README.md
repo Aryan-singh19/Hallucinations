@@ -403,3 +403,112 @@ The application is structured into 5 core modules, each reflecting critical aspe
 
 ---
 
+### 17.2 Architectural Pipeline & Data Flow
+The visual below outlines the end-to-end mechanistic detection and conditioned infill restoration loop implemented inside our application:
+
+```
+[ LLM Output Draft ]
+         │
+         ▼
+ ┌───────────────┐      Extract Attention Entropy (Layers 1-4)
+ │ Layer-wise    ├────► Analyze Logit-Lens Disagreements (Layers 12-20)
+ │ Signal Probe  ├────► Compute Semantic Energy & Variance (Layers 24-32)
+ └───────┬───────┘
+         │ (Fills heatmaps and calibration metrics)
+         ▼
+ ┌───────────────┐
+ │ Span Boundary ├────► Pinpoint & highlight tokens below alignment thresholds
+ │ Identification│      (e.g., specific dates, statistics, named entities)
+ └───────┬───────┘
+         │
+         ▼
+ ┌───────────────┐
+ │ Token Masking ├────► Apply Mask tokens ([MASK]) dynamically over ungrounded spans
+ │ & Replacement │      preserving valid context surrounding the error
+ └───────┬───────┘
+         │
+         ▼
+ ┌───────────────┐
+ │ Context-Aware ├────► Retrieve grounding passages via Gemini Search / Context
+ │ Infill Repair ├────► Output corrected, fluent text back into the system
+ └───────────────┘
+```
+
+---
+
+## 18. Local Setup & Forking Guide
+
+Follow these steps to clone, configure, and execute the Hallucination-Aware LM research platform on your local machine:
+
+### 18.1 Prerequisites
+Ensure you have the following installed on your operating system:
+* **Node.js** (v18.0.0 or higher) or **Bun** (v1.0.0 or higher)
+* **Git** for version control
+
+### 18.2 Cloning the Repository
+First, fork the repository on GitHub to your own account, then clone it locally:
+
+```bash
+# Clone your fork
+git clone https://github.com/Aryan-singh19/Hallucinations.git
+
+# Navigate into the project folder
+cd Hallucinations
+```
+
+### 18.3 Environment Configuration
+Create a local `.env` file in the root directory. You can copy the variables from `.env.example`:
+
+```bash
+cp .env.example .env
+```
+
+Open the `.env` file and supply your API keys:
+```env
+# Required for live server-side LLM outputs, grounding validation, and claim audits
+GEMINI_API_KEY=your_gemini_api_key_here
+
+# Optional: Required if using Hugging Face endpoints
+HF_API_KEY=your_hugging_face_token_here
+```
+
+### 18.4 Installation & Dependencies
+Install the required node packages using your preferred package manager:
+
+```bash
+# Using npm
+npm install
+
+# Or using Bun (recommended for faster dependency resolution)
+bun install
+```
+
+### 18.5 Running the Development Server
+Launch the full-stack development environment. This starts the Express server which hosts both the API endpoints (`/api/*`) and serves the Vite-powered React front-end:
+
+```bash
+# Using npm
+npm run dev
+
+# Using Bun
+bun run dev
+```
+
+Once started, navigate to:
+👉 **`http://localhost:3000`** in your web browser.
+
+### 18.6 Production Compilation & Deployment
+To package and bundle the application for production deployment:
+
+```bash
+# Build Vite client assets & compile the server with esbuild
+npm run build
+
+# Start the optimized production build
+npm run start
+```
+
+This compiles client-side code into static files in `/dist` and bundles the Express server to `dist/server.cjs` using native ES module optimization, ready to run inside any production container environment.
+
+---
+
