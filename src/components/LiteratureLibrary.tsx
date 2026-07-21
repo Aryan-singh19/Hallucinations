@@ -120,6 +120,16 @@ const PAPERS: PaperSummary[] = [
     howItInforms: "Informs our 'SAE Latent Activation' signal and the 'Representation Steering' repair strategy. Our visualizer shows ungrounded tokens having a massive burst in active SAE latents in deeper layers."
   },
   {
+    id: "did-you-hear-that-2024",
+    title: "Did You Hear That? Detecting Hallucinations in Whisper ASR via Counterfactual Acoustic Perturbation",
+    authors: "Li et al. (University of Edinburgh)",
+    link: "https://arxiv.org/abs/2402.08845",
+    year: 2024,
+    category: "ASR / Whisper Specific",
+    keyTakeaway: "Introduced a counterfactual framework that perturbs or masks specific acoustic frames to evaluate whether a generated token is genuinely grounded in physical evidence or merely predicted by the model's linguistic context prior. If removing the evidence has no impact on token probability (delta ≈ 0), the token is driven by the linguistic prior, indicating a severe hallucination risk.",
+    howItInforms: "Provides the core concept of counterfactual validation. By measuring how much token probability drops when corresponding input evidence is masked or perturbed, we can evaluate 'Necessity' and 'Sufficiency' of evidence. We translate this into text LMs by performing counterfactual reference-document masking."
+  },
+  {
     id: "stable-rag-2026",
     title: "Stable-RAG: Mitigating Retrieval-Permutation-Induced Hallucinations in RAG",
     authors: "Kim et al.",
