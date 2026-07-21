@@ -1,0 +1,8 @@
+{
+  "name": "Hallucination-Aware LM",
+  "description": "An interactive playground and research tool for detecting and correcting LLM hallucinations via layer-wise internal signals and conditioned span infilling.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
