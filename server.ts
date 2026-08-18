@@ -229,7 +229,7 @@ Do NOT make these errors obvious or silly; make them blend in perfectly as if th
     } else {
       const ai = getGeminiClient();
       const generationResponse = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-3.7-flash",
         contents: prompt,
         config: {
           systemInstruction,
@@ -270,7 +270,7 @@ Return a JSON array of objects, each representing an error. Each object must hav
         try {
           const ai = getGeminiClient();
           const checkResponse = await ai.models.generateContent({
-            model: "gemini-3.5-flash",
+            model: "gemini-3.7-flash",
             contents: checkPrompt,
             config: {
               responseMimeType: "application/json",
@@ -296,7 +296,7 @@ Return a JSON array of objects, each representing an error. Each object must hav
     } else {
       const ai = getGeminiClient();
       const checkResponse = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-3.7-flash",
         contents: checkPrompt,
         config: {
           responseMimeType: "application/json",
@@ -433,7 +433,7 @@ Return a JSON object containing:
         try {
           const ai = getGeminiClient();
           const infillResponse = await ai.models.generateContent({
-            model: "gemini-3.5-flash",
+            model: "gemini-3.7-flash",
             contents: infillPrompt,
             config: {
               tools: [{ googleSearch: {} }],
@@ -468,7 +468,7 @@ Return a JSON object containing:
     } else {
       const ai = getGeminiClient();
       const infillResponse = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-3.7-flash",
         contents: infillPrompt,
         config: {
           tools: [{ googleSearch: {} }], // Use Google Search to guarantee factual grounding!
@@ -516,7 +516,7 @@ Return a JSON array of errors (empty array if the text is 100% accurate). Use th
         try {
           const ai = getGeminiClient();
           const verifyResponse = await ai.models.generateContent({
-            model: "gemini-3.5-flash",
+            model: "gemini-3.7-flash",
             contents: verifyPrompt,
             config: {
               responseMimeType: "application/json",
@@ -542,7 +542,7 @@ Return a JSON array of errors (empty array if the text is 100% accurate). Use th
     } else {
       const ai = getGeminiClient();
       const verifyResponse = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-3.7-flash",
         contents: verifyPrompt,
         config: {
           responseMimeType: "application/json",
@@ -629,7 +629,7 @@ You MUST return a JSON array of objects. Each object must have these exact field
         console.error("HF grounding map call failed, falling back to Gemini:", err);
         const ai = getGeminiClient();
         const geminiResponse = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
+          model: "gemini-3.7-flash",
           contents: groundingPrompt,
           config: {
             responseMimeType: "application/json",
@@ -655,7 +655,7 @@ You MUST return a JSON array of objects. Each object must have these exact field
     } else {
       const ai = getGeminiClient();
       const geminiResponse = await ai.models.generateContent({
-        model: "gemini-3.5-flash",
+        model: "gemini-3.7-flash",
         contents: groundingPrompt,
         config: {
           responseMimeType: "application/json",
