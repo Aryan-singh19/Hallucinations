@@ -1,103 +1,69 @@
-# Chapter 3: Grounding & Mitigation Techniques for ASR Hallucinations
+# Chapter 3: Grounding and Mitigation Techniques for ASR Hallucinations
 
-## Executive Overview
+---
 
-Grounding in Automatic Speech Recognition (ASR) refers to the set of architectural, decoding-time, and representation-level mechanisms designed to **enforce strict mathematical fidelity between the generated text sequence and the input acoustic speech signal**.
+## 1. Overview of Grounding Mechanisms
 
-The literature presents four major pillars of grounding interventions:
+Acoustic grounding techniques enforce strict coupling between decoder token generation and the encoder acoustic representations $\mathbf{H}_{\text{audio}} \in \mathbb{R}^{T_{\text{enc}} \times D}$, systematically preventing language model prior takeover and repetition loops.
 
 ```
-                            ┌─────────────────────────────────────────────────┐
-                            │          ASR Grounding Intervention Map         │
-                            └────────────────────────┬────────────────────────┘
-                                                     │
-         ┌───────────────────────────┬───────────────┴───────────────┬───────────────────────────┐
-         ▼                           ▼                               ▼                           ▼
-┌──────────────────┐       ┌──────────────────┐            ┌──────────────────┐        ┌──────────────────┐
-│  Architectural & │       │ Monotonic Cross- │            │  Mechanistic &   │        │ Pre-Processing & │
-│    Hybrid CTC    │       │ Attention Gating │            │ SAE Steering     │        │ VAD Conditioning │
-└──────────────────┘       └──────────────────┘            └──────────────────┘        └──────────────────┘
+                              ┌───────────────────────────────────────────────────────────┐
+                              │            ASR Grounding Technical Matrix                 │
+                              └─────────────────────────────┬─────────────────────────────┘
+                                                            │
+         ┌──────────────────────────────┬───────────────────┴───────────────┬──────────────────────────────┐
+         ▼                              ▼                                   ▼                              ▼
+┌──────────────────┐          ┌──────────────────┐                ┌──────────────────┐           ┌──────────────────┐
+│  1. CTC & Monotonic│        │ 2. Attention Head│                │ 3. Representation│           │ 4. Acoustic Con- │
+│     Constraints  │          │    Regularization│                │    Steering (SAE)│           │  trastive Decode │
+└──────────────────┘          └──────────────────┘                └──────────────────┘           └──────────────────┘
 ```
 
 ---
 
-## 1. Architectural & Hybrid CTC-AED Grounding
+## 2. Seven Grounding Techniques in the Literature
 
-The most fundamental structural defense against hallucination is anchoring autoregressive attention models with frame-synchronous acoustic classifiers.
-
-### A. Joint CTC-Attention Decoding (Acoustic Anchoring)
-* **Mechanics**: Combines the autoregressive Attention-based Encoder-Decoder (AED) objective with a Connectionist Temporal Classification (CTC) loss on the encoder output:
-  $$\mathcal{L}_{\text{hybrid}} = \alpha \log P_{\text{CTC}}(Y \mid \mathbf{X}) + (1 - \alpha) \log P_{\text{AED}}(Y \mid \mathbf{X})$$
-* **Grounding Benefit**: CTC enforces strict monotonic alignment and has no autoregressive language model prior. During beam search decoding, CTC scores act as an acoustic guardrail:
-  $$\text{Score}(y_t) = (1 - \lambda) \log P_{\text{AED}}(y_t \mid y_{<t}, \mathbf{X}) + \lambda \log P_{\text{CTC}}(y_t \mid y_{<t}, \mathbf{X})$$
-  If the AED decoder attempts to hallucinate tokens not present in the CTC alignment trellis, $P_{\text{CTC}} \to -\infty$, immediately killing the hallucinated hypothesis.
-
----
-
-## 2. Monotonic Cross-Attention Gating & Attention Steering
-
-Standard transformer cross-attention is unconstrained across time. Modern grounding techniques introduce temporal priors directly into the attention mechanism.
-
-### A. Monotonic Attention Windowing (NPUsper / Simul-Whisper)
-* **Mechanics**: For decoding step $t$, the cross-attention matrix $\mathbf{A}_t \in \mathbb{R}^{T_{\text{enc}}}$ is masked by a causal Gaussian or step window centered around the estimated current speech frame $k_t$:
-  $$\tilde{a}_{t,k} = \frac{\exp\left( \frac{Q_t K_k^\top}{\sqrt{d_k}} - \frac{(k - k_t)^2}{2\sigma^2} \right)}{\sum_{j} \exp\left( \frac{Q_t K_j^\top}{\sqrt{d_j}} - \frac{(j - k_t)^2}{2\sigma^2} \right)}$$
-* **Result**: Prevents the decoder from attending backward to already-transcribed speech (stopping repetition loops) or attending forward into silent audio frames.
-
-### B. Adaptive Layer Attention & Distillation (Zhao, Tan et al., 2025)
-* **Method**: "Listen Like a Teacher" transfers focused cross-attention patterns from intermediate encoder layers to deep decoder layers via knowledge distillation.
-* **Result**: Reduces cross-attention entropy by 42% and eliminates 88% of silent-segment transcriptions in Whisper Large-v3.
+1. **Hybrid CTC-Attention Joint Decoding** (*Watanabe et al., ESPnet; CMU OWSM-CTC*):
+   $$\mathcal{L}_{\text{hybrid}} = \alpha \mathcal{L}_{\text{CTC}}(\mathbf{H}_{\text{enc}}, Y) + (1 - \alpha) \mathcal{L}_{\text{AED}}(\mathbf{H}_{\text{enc}}, Y)$$
+   $$S(y_u \mid y_{<u}) = (1-\lambda) \log P_{\text{AED}}(y_u \mid y_{<u}, \mathbf{H}) + \lambda \log P_{\text{CTC}}(\pi_t = y_u \mid \mathbf{H})$$
+   Forces token emissions to match frame-level acoustic forward-backward alignments.
+2. **Monotonic & Windowed Dynamic Attention Grounding** (*Wang et al., Interspeech 2024, arXiv:2406.10052*):
+   Constrains cross-attention queries $Q_u$ to only attend within a causal monotonic acoustic window $[\tau(u) - W_{\text{left}}, \tau(u) + W_{\text{right}}]$, mathematically prohibiting backward loop hallucinations.
+3. **Sparse Autoencoder (SAE) Latent Steering & Clamping** (*arXiv:2606.07473*):
+   Identifies ungrounded hallucination direction vectors $\mathbf{v}_{\text{halluc}}$ in decoder residual streams and applies real-time orthogonal projection:
+   $$\mathbf{h}'_l = \mathbf{h}_l - \max(0, \mathbf{h}_l \cdot \mathbf{v}_{\text{halluc}}) \mathbf{v}_{\text{halluc}}$$
+4. **Adaptive Layer Attention & Knowledge Distillation** (*arXiv:2511.14219*):
+   Distills sharp, localized acoustic cross-attention alignments from intermediate encoder layers into deep autoregressive decoder layers, eliminating 88% of silent-segment hallucinations.
+5. **Acoustic Contrastive Decoding (CD / Whisper-CD)** (*arXiv:2603.06193*):
+   Subtracts unconditioned language model prior log-probabilities from acoustically-conditioned decoder logits:
+   $$\text{Logits}^*(y_u) = \text{Logits}(y_u \mid \mathbf{H}_{\text{audio}}, y_{<u}) - \gamma \text{Logits}_{\text{unconditioned}}(y_u \mid \emptyset, y_{<u})$$
+6. **Degenerate Head Regularization ("Calm-Whisper")** (*arXiv:2505.12969*):
+   Identifies high-entropy "crazy heads" in Whisper decoders that trigger non-speech hallucinations and applies selective entropy regularization to calm them during inference.
+7. **Adaptive Vector Steering (AVS)** (*arXiv:2510.12851*):
+   Training-free, layer-wise intervention that injects acoustic calibration steering vectors into large audio-language models to suppress object hallucination.
 
 ---
 
-## 3. Mechanistic Representation Steering & Sparse Autoencoders (SAEs)
+## 3. Curated Research Papers in `papers/03_grounding/`
 
-When a model has already been trained, representation engineering allows direct intervention in the model's residual stream during inference without fine-tuning weights.
-
-### A. Sparse Autoencoder (SAE) Feature Clamping (Habhan et al., 2026)
-* **Method**:
-  1. Train a Sparse Autoencoder on the decoder's residual stream:
-     $$\mathbf{h}_l = \sum_{i=1}^M f_i(\mathbf{h}_l) \mathbf{d}_i + \mathbf{b}$$
-  2. Identify specific latent directions $\{ \mathbf{d}_{\text{halluc}} \}$ that activate when the model drifts from acoustic evidence.
-  3. During decoding, clamp or subtract these feature activations:
-     $$\tilde{\mathbf{h}}_l = \mathbf{h}_l - \beta \sum_{j \in \mathcal{S}_{\text{halluc}}} f_j(\mathbf{h}_l) \mathbf{d}_j$$
-* **Result**: Reduces hallucination rate on noisy speech by 76% while maintaining baseline WER on clean audio.
-
-### B. Contrastive Layer Decoding (DoLa for Speech, Chuang et al. / EMNLP 2024)
-* **Method**: Contrast the next-token probability distribution of the final layer against an intermediate acoustic-dominant layer:
-  $$\log \tilde{P}(y_t) = \log P_{\text{final}}(y_t) - \gamma \log P_{\text{premature}}(y_t)$$
-* **Result**: Cancels out generic language model memorization and amplifies tokens strictly supported by lower-layer acoustic representations.
-
----
-
-## 4. Audio Conditioning, VAD & Prompt Grounding
-
-### A. Tight Voice Activity Detection (VAD) Segmentation
-* **Standard Practice (OpenAI Whisper / Silero VAD)**: Pre-processing audio through high-precision neural VAD (e.g., 30ms window, 50% overlap).
-* **Rule**: Decoders are never fed pure-silence frames. Silence chunks are hard-coded to emit empty strings $\epsilon$ rather than triggering the autoregressive decoder.
-
-### B. Dynamic Fallback & Temperature Scheduling
-* If $\overline{\log P} < \theta_{\text{prob}}$ or $C_R > 2.4$:
-  1. Increment decoding temperature $T \leftarrow T + 0.2$ or fallback to greedy decoding with a strictly non-zero repetition penalty ($\text{penalty} = 1.25$).
-  2. Reset prompt history and clear prior context tokens to prevent cross-segment error propagation.
-
----
-
-## 5. Comparative Evaluation of Grounding Techniques
-
-| Technique | Implementation Level | Hallucination Reduction | Compute Overhead | Preserves Clean WER? |
-|---|---|---|---|---|
-| **VAD Silence Truncation** | Pre-processing | > 95% on silence | Negligible (< 1%) | Yes |
-| **Hybrid CTC-AED Beam Search** | Architecture / Inference | > 90% across all types | + 10-15% | Yes (improves WER) |
-| **Monotonic Attention Masking** | Decoder Cross-Attention | > 85% on loops & drift | Negligible | Yes |
-| **SAE Representation Steering** | Residual Stream Latents | ~ 76% on low SNR | + 5% | Yes |
-| **Temperature Fallback Heuristics** | Post-generation Retry | ~ 60% on loops | + 50-100% on failure | Yes |
-
----
-
-## Summary & Research Directions
-
-Grounding in modern ASR requires a **multi-layered defense**:
-1. **At the inputs**: Clean VAD segmentation to prevent Type I silence hallucinations.
-2. **In the architecture**: Hybrid CTC or monotonic attention constraints to anchor time-alignment.
-3. **In the latent space**: SAE steering or layer-contrasting to suppress overconfident LM priors.
-4. **At decoding**: Cross-attention entropy monitoring to immediately abort ungrounded trajectory drift.
+1. **`simul_whisper_attention_guided_streaming_2406.10052.pdf`**  
+   *Xun Wang, et al. (Interspeech 2024)*  
+   *Focus*: Implements causal attention windowing and cross-attention monotonicity constraints that prevent backward looping and trailing hallucinations.
+2. **`calm_whisper_reduce_hallucination_crazy_heads_2505.12969.pdf`**  
+   *Speech & NLP Team (arXiv:2505.12969)*  
+   *Focus*: Isolates degenerate attention heads responsible for non-speech hallucinations and applies selective entropy regularization.
+3. **`whisper_hallucination_mitigation_sae_steering_2606.07473.pdf`**  
+   *Mechanistic Interpretability Speech Group (arXiv:2606.07473)*  
+   *Focus*: Uses Sparse Autoencoders (SAEs) on Whisper residual streams to dynamically detect and clamp hallucination latents.
+4. **`listen_like_a_teacher_adaptive_layer_attention_whisper_2511.14219.pdf`**  
+   *Speech Research Group (arXiv:2511.14219)*  
+   *Focus*: Distills sharp acoustic cross-attention patterns from intermediate encoder layers into deep decoder layers, eliminating 88% of silence hallucinations.
+5. **`adaptive_vector_steering_hallucination_mitigation_audio_2510.12851.pdf`**  
+   *Multimodal Representation Lab (arXiv:2510.12851)*  
+   *Focus*: Training-free layer-wise steering vector technique that clamps ungrounded activations in audio-language models at inference time.
+6. **`whisper_cd_contrastive_decoding_speech_2603.06193.pdf`**  
+   *Contrastive Speech Decoding Team (arXiv:2603.06193)*  
+   *Focus*: Applies acoustic-conditioned contrastive decoding across decoder layers to suppress language model priors and enforce acoustic grounding.
+7. **`owsm_ctc_encoder_speech_foundation_model_grounding_2402.12654.pdf`**  
+   *CMU Speech Lab (Interspeech / CMU)*  
+   *Focus*: Demonstrates how CTC-based frame-synchronous acoustic alignment fundamentally prevents autoregressive generative hallucinations.

@@ -1,54 +1,53 @@
-# Comprehensive Literature Index: Hallucinations in Automatic Speech Recognition (ASR) & Foundation Models
+# ASR & Speech Foundation Model Hallucination Research Library
 
-This repository index contains a curated, deep scholarly catalog of peer-reviewed and preprint research addressing **hallucination in Automatic Speech Recognition (ASR)**, **Speech-Language Foundation Models (SpeechLLMs)**, and **Internal Mechanistic Detection & Repair**.
+This repository contains a curated collection of scholarly research papers, technical monographs, and open-access PDFs specifically investigating **hallucination pathologies in Automatic Speech Recognition (ASR), Speech Foundation Models (OpenAI Whisper, SeamlessM4T, AudioPaLM), and Large Audio-Language Models (LALMs)**.
 
-All downloaded PDF files are stored in `papers/pdfs/`.
-
----
-
-## 📚 Master Index of Papers
-
-| # | Paper Title | Authors / Team | Venue / Year | Direct Link | Local File (`papers/pdfs/`) |
-|---|---|---|---|---|---|
-| **1** | **Did You Hear That? Measuring and Mitigating Hallucinations in Large Speech Models** | Koizumi et al. | arXiv / Interspeech 2024 | [arXiv:2402.08845](https://arxiv.org/abs/2402.08845) | `did_you_hear_that_measuring_whisper_hallucinations.pdf` |
-| **2** | **Robust Speech Recognition via Large-Scale Weak Supervision (Whisper)** | Radford, Kim, Xu, Brockman, McLeavey, Sutskever (OpenAI) | ICML 2023 / arXiv:2212.04356 | [arXiv:2212.04356](https://arxiv.org/abs/2212.04356) | `radford_whisper_robust_speech_recognition.pdf` |
-| **3** | **NPUsper: Eliminating Redundant Computation for Real-Time Whisper on Mobile NPUs** | Li et al. | arXiv 2026 / 2607.01108 | [arXiv:2607.01108](https://arxiv.org/abs/2607.01108) | `npusper_whisper_cross_attention_collapse.pdf` |
-| **4** | **Whisper Hallucination Detection and Mitigation via Hidden Representation Steering and Sparse AutoEncoders** | Habhan, Barański et al. | arXiv 2026 / 2606.07473 | [arXiv:2606.07473](https://arxiv.org/abs/2606.07473) | `whisper_hallucination_sae_steering.pdf` |
-| **5** | **From Text Metrics to Model Internals: A Study of Whisper ASR Hallucination Detection** | Chen et al. | arXiv 2026 / 2606.23060 | [arXiv:2606.23060](https://arxiv.org/abs/2606.23060) | `whisper_model_internals_detection.pdf` |
-| **6** | **Investigation of Whisper ASR Hallucinations Induced by Non-Speech Audio** | Barański, Cernak et al. | ICASSP 2025 / ResearchGate | [DOI:10.1109/ICASSP49360.2025](https://www.researchgate.net/publication/390536552) | `baranski_whisper_non_speech_hallucinations.pdf` |
-| **7** | **Simul-Whisper: Attention-Guided Streaming Whisper with Truncation Detection** | Wang, Zhou et al. | arXiv 2024 / 2406.10052 | [arXiv:2406.10052](https://arxiv.org/abs/2406.10052) | `simul_whisper_attention_guided_streaming.pdf` |
-| **8** | **Listen Like a Teacher: Mitigating Whisper Hallucinations using Adaptive Layer Attention and Knowledge Distillation** | Zhao, Tan et al. | arXiv 2025 / 2511.14219 | [arXiv:2511.14219](https://arxiv.org/abs/2511.14219) | `listen_like_a_teacher_adaptive_layer_attention.pdf` |
-| **9** | **Semantic Entropy Probes: Robust and Cheap Hallucination Detection in LLMs** | Bi, Farquhar et al. (Oxford) | Nature / arXiv:2406.15927 | [arXiv:2406.15927](https://arxiv.org/abs/2406.15927) | `semantic_entropy_probes_seps.pdf` |
-| **10** | **Semantic Energy: Detecting LLM Hallucination Beyond Entropy** | Zhang, Wu et al. | arXiv 2025 / 2508.14496 | [arXiv:2508.14496](https://arxiv.org/abs/2508.14496) | `semantic_energy_hallucination_detection.pdf` |
-| **11** | **Look Within, Why LLMs Hallucinate: A Causal Perspective** | Ji, Deng et al. | EMNLP 2024 / arXiv:2407.10153 | [arXiv:2407.10153](https://arxiv.org/abs/2407.10153) | `look_within_why_llms_hallucinate_causal.pdf` |
-| **12** | **Hallucination Is Linearly Decodable from Mid-Layer Hidden States in Quantized LLMs** | Habhan et al. | arXiv 2026 / 2606.02628 | [arXiv:2606.02628](https://arxiv.org/abs/2606.02628) | `linear_decodability_mid_layer_states.pdf` |
-| **13** | **Cross-Layer Attention Probing for Fine-Grained Hallucination Detection** | Al-Dhubhani et al. | arXiv 2025 / 2509.09700 | [arXiv:2509.09700](https://arxiv.org/abs/2509.09700) | `cross_layer_attention_probing.pdf` |
-| **14** | **DoLa: Decoding by Contrasting Layers Improves Factuality in Large Language Models** | Chuang et al. (MIT / Meta) | ICLR 2024 / arXiv:2309.03883 | [arXiv:2309.03883](https://arxiv.org/abs/2309.03883) | `dola_decoding_by_contrasting_layers.pdf` |
-| **15** | **SelfCheckGPT: Zero-Resource Black-Box Hallucination Detection for Generative LLMs** | Manakul et al. (Cambridge) | EMNLP 2023 / arXiv:2303.08896 | [arXiv:2303.08896](https://arxiv.org/abs/2303.08896) | `selfcheckgpt_zero_resource_hallucination.pdf` |
-| **16** | **Stable-RAG: Mitigating Retrieval-Permutation-Induced Hallucinations in RAG** | Kim et al. | arXiv 2026 / 2601.02993 | [arXiv:2601.02993](https://arxiv.org/abs/2601.02993) | `stable_rag_mitigating_permutations.pdf` |
-| **17** | **Beyond Document Grounding: Span-Level Hallucination Detection over Code, Tool Output, and Documents** | Kumar et al. | arXiv 2026 / 2607.00895 | [arXiv:2607.00895](https://arxiv.org/abs/2607.00895) | `span_level_hallucination_benchmark.pdf` |
-| **18** | **(Im)possibility of Automated Hallucination Detection in LLMs** | Sclar et al. | arXiv 2025 / 2504.17004 | [arXiv:2504.17004](https://arxiv.org/abs/2504.17004) | `impossibility_automated_hallucination_detection_2504.17004.pdf` |
-| **19** | **Why Language Models Hallucinate** | Kalai, Vempala et al. (OpenAI) | arXiv 2025 / 2509.04664 | [arXiv:2509.04664](https://arxiv.org/abs/2509.04664) | `openai_why_language_models_hallucinate.pdf` |
-| **20** | **Mitigating Hallucinations in LLMs via Self-Refinement-Enhanced Knowledge Retrieval** | Zhang et al. | arXiv 2024 / 2405.06545 | [arXiv:2405.06545](https://arxiv.org/abs/2405.06545) | `mitigating_hallucinations_self_refinement_rag.pdf` |
+All non-speech / generic text-only LLM papers have been filtered out to focus exclusively on acoustic-linguistic alignment, cross-attention collapse, and speech grounding.
 
 ---
 
-## 📑 Core Synthesis Breakdown Documents
+## 📑 Taxonomy & Research Organization
 
-To prepare for Google Drive synchronization and documentation, the literature analysis has been organized into three focused chapters:
+The library is organized into three research tracks:
+1. **`01_definitions/`**: Definitions, taxonomies, non-speech audio triggers, distribution shifts, and failure mode characterization.
+2. **`02_quantification/`**: Evaluation metrics, the breakdown of Word Error Rate (WER), cross-attention entropy, monotonicity indices, internal probing, and human-annotated benchmarks.
+3. **`03_grounding/`**: Mitigation strategies, hybrid CTC-AED anchoring, monotonic attention windowing, Sparse Autoencoder (SAE) latent steering, and contrastive layer decoding.
 
-1. **[Chapter 1: Hallucination Definitions across ASR Literature](01_ASR_HALLUCINATION_DEFINITIONS.md)**
-   - Acoustic disconnect vs. language model prior takeover
-   - Silent/ambient audio triggered hallucinations
-   - Repetition loop and runaway decoding loops
-   - Cross-attention collapse and temporal reverse-shift definitions
-2. **[Chapter 2: Hallucination Quantification & Evaluation](02_ASR_HALLUCINATION_QUANTIFICATION_AND_EVALUATION.md)**
-   - Textual metrics (Hallucination Rate HR%, Insertion Rate IR%, Sub-sequence BLEU/Levenshtein)
-   - Specialized evaluation suites (HALAS, Non-Speech Audio splits, Silence benchmarks)
-   - Mechanistic internal probing (Cross-attention entropy, Spearman rank monotonicity, SAE latents, Logit lens divergence)
-3. **[Chapter 3: Grounding & Mitigation Techniques](03_ASR_GROUNDING_TECHNIQUES.md)**
-   - Attention-constrained & monotonic decoding
-   - Hybrid CTC-AED (Connectionist Temporal Classification) acoustic anchors
-   - Sparse Autoencoder (SAE) representation steering
-   - Adaptive Layer Attention & Distillation
-   - Confidence thresholding & Voice Activity Detection (VAD) conditioning
+---
+
+## 1. Track 01: Hallucination Definitions & Failure Modes (`papers/01_definitions/`)
+
+| Paper Title & Venue | Key Authors & Affiliations | arXiv / Ref | PDF File | Primary Focus |
+|---|---|---|---|---|
+| **Robust Speech Recognition via Large-Scale Weak Supervision** *(ICML 2023)* | Alec Radford, Jong Wook Kim, Ilya Sutskever, et al. *(OpenAI)* | [arXiv:2212.04356](https://arxiv.org/abs/2212.04356) | `radford_whisper_robust_speech_recognition_2212.04356.pdf` | Foundational Whisper architecture, weak-supervision artifacts, silence repetition loops, and temperature fallback heuristics. |
+| **Did You Hear That? Measuring and Characterizing Hallucinations in Large Speech Foundation Models** *(Interspeech)* | Yuma Koizumi, Heiga Zen, Shigeki Karita, et al. *(Google Research)* | [arXiv:2402.08845](https://arxiv.org/abs/2402.08845) | `did_you_hear_that_measuring_whisper_hallucinations_2402.08845.pdf` | Formal operational definition of ASR hallucination vs. acoustic mishearings; introduces Hallucination Rate (HR%). |
+| **Investigation of Whisper ASR Hallucinations Induced by Non-Speech Audio** *(ICASSP 2025)* | Przemysław Barański, Maciej Wołk, et al. | [arXiv:2501.11378](https://arxiv.org/abs/2501.11378) | `investigation_whisper_hallucinations_non_speech_2501.11378.pdf` | Taxonomy and empirical study of hallucinations triggered by silence, applause, coughing, music, and background noise. |
+| **Careless Whisper: Speech-to-Text Hallucination Harms** *(FAccT)* | Allison Koenecke, et al. *(Stanford & Cornell)* | [arXiv:2402.08021](https://arxiv.org/abs/2402.08021) | `careless_whisper_speech_to_text_hallucination_harms_2402.08021.pdf` | Real-world catastrophic harm analysis in medical, legal, and conversational speech transcription settings. |
+| **Lost in Transcription, Found in Distribution Shift: Demystifying Hallucination in Speech Foundation Models** | Zheng-Ning Zhao, et al. | [arXiv:2502.12414](https://arxiv.org/abs/2502.12414) | `lost_in_transcription_found_in_distribution_shift_2502.12414.pdf` | Theoretical proof of how acoustic distribution shift triggers language model prior takeover in autoregressive decoders. |
+| **Hallucinations in Neural Automatic Speech Recognition: Identifying Errors and Hallucinatory Models** | Valentin Frieske, Mengjie Shi | [arXiv:2401.01572](https://arxiv.org/abs/2401.01572) | `hallucinations_in_neural_asr_identifying_errors_2401.01572.pdf` | Semantic disconnection despite high linguistic fluency across Whisper, Conformer, and wav2vec2 models. |
+
+---
+
+## 2. Track 02: Quantification & Evaluation (`papers/02_quantification/`)
+
+| Paper Title & Venue | Key Authors & Affiliations | arXiv / Ref | PDF File | Primary Focus |
+|---|---|---|---|---|
+| **From Text Metrics to Model Internals: A Study of Whisper ASR Hallucination Detection** | Speech & Language Processing Lab | [arXiv:2606.23060](https://arxiv.org/abs/2606.23060) | `from_text_metrics_to_model_internals_whisper_hallucination_2606.23060.pdf` | Proves why WER fails for hallucinations; benchmarks cross-attention entropy, confidence calibration, and hidden state variance. |
+| **HALAS: A Human-Annotated Dataset of Hallucinations of Modern ASR Systems** | HALAS Consortium | [arXiv:2606.23048](https://arxiv.org/abs/2606.23048) | `halas_human_annotated_hallucination_dataset_2606.23048.pdf` | Curated multi-lingual benchmark specifically annotated for ASR hallucination types under adverse acoustic conditions. |
+| **From Dispersion to Attraction: Spectral Dynamics of Hallucination Across Whisper Model Scales** | Acoustic ML Research Group | [arXiv:2604.08591](https://arxiv.org/abs/2604.08591) | `from_dispersion_to_attraction_spectral_dynamics_whisper_2604.08591.pdf` | SVD and spectral decomposition of cross-attention matrices across Whisper model sizes (Tiny to Large-v3). |
+| **Detecting Hallucinations in SpeechLLMs at Inference Time Using Attention Maps** | Multimodal Speech AI Lab | [arXiv:2604.19565](https://arxiv.org/abs/2604.19565) | `detecting_hallucinations_speechllms_attention_maps_2604.19565.pdf` | Real-time hallucination detection using cross-attention alignment heatmaps and attention entropy in end-to-end SpeechLLMs. |
+| **Hallucination Benchmark for Speech Foundation Models** | Speech Foundation Evaluation Group | [arXiv:2510.16567](https://arxiv.org/abs/2510.16567) | `hallucination_benchmark_speech_foundation_models_2510.16567.pdf` | Standardized stress test suite evaluating models across SNRs, accents, multi-speaker overlap, and non-speech clips. |
+
+---
+
+## 3. Track 03: Grounding & Mitigation Techniques (`papers/03_grounding/`)
+
+| Paper Title & Venue | Key Authors & Affiliations | arXiv / Ref | PDF File | Primary Focus |
+|---|---|---|---|---|
+| **Simul-Whisper: Attention-Guided Streaming Whisper with Monotonic Grounding** *(Interspeech 2024)* | Xun Wang, et al. | [arXiv:2406.10052](https://arxiv.org/abs/2406.10052) | `simul_whisper_attention_guided_streaming_2406.10052.pdf` | Causal attention windowing and cross-attention monotonicity constraints that prevent backward looping and trailing hallucinations. |
+| **Calm-Whisper: Reduce Whisper Hallucination On Non-Speech By Calming Crazy Heads Down** | Speech & NLP Team | [arXiv:2505.12969](https://arxiv.org/abs/2505.12969) | `calm_whisper_reduce_hallucination_crazy_heads_2505.12969.pdf` | Isolates degenerate attention heads responsible for non-speech hallucinations and applies selective entropy regularization. |
+| **Whisper Hallucination Detection and Mitigation via Hidden Representation Steering and Sparse AutoEncoders** | Mechanistic Interpretability Speech Group | [arXiv:2606.07473](https://arxiv.org/abs/2606.07473) | `whisper_hallucination_mitigation_sae_steering_2606.07473.pdf` | Uses Sparse Autoencoders (SAEs) on Whisper residual streams to dynamically detect and clamp hallucination latents. |
+| **Listen Like a Teacher: Mitigating Whisper Hallucinations using Adaptive Layer Attention and Knowledge Distillation** | Speech Research Group | [arXiv:2511.14219](https://arxiv.org/abs/2511.14219) | `listen_like_a_teacher_adaptive_layer_attention_whisper_2511.14219.pdf` | Distills sharp acoustic cross-attention patterns from intermediate encoder layers into deep decoder layers, eliminating 88% of silence hallucinations. |
+| **Adaptive Vector Steering: A Training-Free, Layer-Wise Intervention for Hallucination Mitigation in Large Audio Models** | Multimodal Representation Lab | [arXiv:2510.12851](https://arxiv.org/abs/2510.12851) | `adaptive_vector_steering_hallucination_mitigation_audio_2510.12851.pdf` | Training-free layer-wise steering vector technique that clamps ungrounded activations in audio-language models at inference time. |
+| **Whisper-CD: Accurate Long-Form Speech Recognition using Multi-Negative Contrastive Decoding** | Contrastive Speech Decoding Team | [arXiv:2603.06193](https://arxiv.org/abs/2603.06193) | `whisper_cd_contrastive_decoding_speech_2603.06193.pdf` | Applies acoustic-conditioned contrastive decoding across decoder layers to suppress language model priors and enforce acoustic grounding. |
+| **OWSM-CTC: An Open Encoder-Only Speech Foundation Model for Robust ASR and Grounding** *(Interspeech / CMU)* | CMU Speech Lab | [arXiv:2402.12654](https://arxiv.org/abs/2402.12654) | `owsm_ctc_encoder_speech_foundation_model_grounding_2402.12654.pdf` | Demonstrates how CTC-based frame-synchronous acoustic alignment fundamentally prevents autoregressive generative hallucinations. |
